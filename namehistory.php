@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type:application/json");
 
-(isset($_GET['uuid'])&&$_GET['uuid'] != "") or die("There has to be either a UUID or username given");
+(isset($_GET['uuid'])&&$_GET['uuid'] != "") or die('{\"Error\":\"No Username or UUID given!\"}');;
 
 $uuid = $_GET['uuid'];
 if(strlen($uuid)<=16 && strlen($uuid)>=3){
