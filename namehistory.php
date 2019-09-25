@@ -10,18 +10,19 @@ if(strlen($uuid)<=16 && strlen($uuid)>=3){
   preg_match($usernameRegex, $uuid) or die('{"Error":"Invalid Username!"}');
   #Convert username too uuid
   
-  $uuid = getUUIDFromMojang($uuid);
+  $uuid = getUUIDFromUsername($uuid);
 }
 $uuid = preg_replace('/[\s-]/', '', $uuid);
-$UUIDRegex = '/[0-9a-f]{32}/';
+$UUIDRegex = '/^[0-9a-f]{32}$/';
 preg_match($UUIDRegex, $uuid) or die('{"Error":"Invalid UUID!"}');
 $url = "https://api.mojang.com/user/profiles/".$uuid."/names";
 $response = file_get_contents($url);
+if($response != null) or die('{"Error":"Mojang does not know that UUID!"}');
 print_r($response);
 
 
 
-function getUUIDFromMojang($username){
+function getUUIDFromUsername($username){
 	$url = "https://api.mojang.com/users/profiles/minecraft/".$username;
 	$obj = file_get_contents($url);
 	($obj != null) or die('{"Error":"Mojang does not know that username!"}');
