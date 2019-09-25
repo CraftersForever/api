@@ -17,7 +17,7 @@ $UUIDRegex = '/^[0-9a-f]{32}$/';
 preg_match($UUIDRegex, $uuid) or die('{"Error":"Invalid UUID!"}');
 $url = "https://api.mojang.com/user/profiles/".$uuid."/names";
 $response = file_get_contents($url);
-if($response != null) or die('{"Error":"Mojang does not know that UUID!"}');
+($response != null) or die('{"Error":"Mojang does not know that UUID!"}');
 print_r($response);
 
 
