@@ -6,9 +6,9 @@ function getPlayTimeFromPlayer($playerUUID)
 {
     $servername = "localhost";
     $port = "3306";
-    $database = "status";
-    $username = "status";
-    $password = "6_c35BcGVWUdRDX1";
+    $database = "*****";
+    $username = "*****";
+    $password = "*****";
     $output = "";
     $conn = new mysqli($servername, $username, $password);
     if ($conn->connect_error) {
