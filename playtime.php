@@ -6,9 +6,9 @@ function getPlayTimeFromPlayer($playerUUID)
 {
     $servername = "localhost";
     $port = "3306";
-    $database = "****"; #hidden for security reasons
-    $username = "****"; #hidden for security reasons
-    $password = "****"; #hidden for security reasons
+    $database = "status";
+    $username = "status";
+    $password = "6_c35BcGVWUdRDX1";
     $output = "";
     $conn = new mysqli($servername, $username, $password);
     if ($conn->connect_error) {
@@ -36,11 +36,11 @@ function getUUIDFromGetParameter()
 {
     $input = $_GET['uuid'];
     if (!isset($input)) {
-        die("{\"Error:\":\"No UUID passed to the server. Use GET Parameter 'uuid'\"");
+        die("{\"Error:\":\"No UUID passed to the server. Use GET Parameter 'uuid'\"}");
     }
     $uuid = trim($input);
     $UUIDv4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
-    preg_match($UUIDv4, $uuid) or die('{\"Error\":\"Invalid UUID! Please use UUID with slashes\"}');
+    preg_match($UUIDv4, $uuid) or die('{\"Error\":\"Invalid UUID! Please use UUIDv4 with slashes\"}');
     return $uuid;
 }
 
