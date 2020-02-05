@@ -1,32 +1,37 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 $servername = "localhost";
-$port       = "3306";
-$database   = "****"; #hidden for security reasons
-$username   = "****"; #hidden for security reasons
-$password   = "****"; #hidden for security reasons
+$port = "3306";
+$database = "status";
+$username = "status";
+$password = "****"; #Hidden for security reasons
+
 
 $conn   = new mysqli($servername, $username, $password);
 if ($conn->connect_error) {
     echo $conn->connect_error;
-    die('{\"Error\":\"Connection to Database failed\"}');
+    die('{"Error":"Connection to Database failed"}');
 }
 
 mysqli_select_db($conn, $database);
 $sql    = "SELECT
-  Status.timestamp,
-  Spieler.Spieler_UUID,
-  Spieler.Spieler_Name
+  subset.timestamp as timestamp,
+  subset.slots as slots,
+  subset.status as status,
+  Spieler.Spieler_UUID as Spieler_UUID,
+  Spieler.Spieler_Name as Spieler_Name
 FROM
-  Status
-  LEFT JOIN OnlineSpieler on Status.timestamp = OnlineSpieler.timestamp
-  INNER JOIN Spieler on OnlineSpieler.Spieler_UUID = Spieler.Spieler_UUID
-WHERE
-  Status.timestamp = (
+  (
     SELECT
-      MAX(Status.timestamp)
+      *
     FROM
-      Status";
+      Status
+    HAVING
+      Status.timestamp = (SELECT MAX(Status.timestamp) as max FROM Status)
+  ) as subset
+  LEFT JOIN OnlineSpieler on subset.timestamp = OnlineSpieler.timestamp
+  LEFT JOIN Spieler on OnlineSpieler.Spieler_UUID = Spieler.Spieler_UUID
+";
 $result = mysqli_query($conn, $sql);
 if (!$result) {
     die('{"Error":"SQL Error"}');
@@ -35,18 +40,20 @@ $timestamp     = 0;
 $maxslots      = 0;
 $status        = 0;
 $onlinePlayers = array();
-
 foreach ($result as $row) {
+	
     $timestamp = $row['timestamp'];
     $maxslots  = $row['slots'];
     $status    = $row['status'];
-    if ($result['Spieler_UUID'] != null) {
+	
+    if ($row['Spieler_UUID'] != null) {
         $onlinePlayer    = array(
-            "uuid" => $result['Spieler_UUID'],
-            "name" => $result['Spieler_Name']
+            "uuid" => $row['Spieler_UUID'],
+            "name" => $row['Spieler_Name']
         );
         $onlinePlayers[] = $onlinePlayer;
     }
+	
 }
 
 if (outdated($timestamp)) {
