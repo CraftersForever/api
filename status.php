@@ -55,8 +55,11 @@ foreach ($result as $row) {
     }
 	
 }
+if($status == 1){
+    die('{"status":"maintenance"}');
+}
 
-if (outdated($timestamp)) {
+if ($status == 2 || outdated($timestamp)) {
     die('{"status":"offline"}');
 }
 $outputObject = array(
